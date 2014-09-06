@@ -3,10 +3,9 @@
 ASSERTIONS
 
 An assertion is a logical statement that should evaluate to true. Assertions can 
-be just a mind-amge, at most a notation or comment  in the coade. They have 
-become so popular that now some languages have assert statements, which are 
-actual code that evaluates the assertion. If the assertion evaluates false the 
-code flow might be terminated or an exception thrown.
+be just a mind-game - at most a notation or comment in the code, or they can be actual
+code checks. They have become so popular that now some languages have assert statements, 
+which evaluate the assertion and if false the code flow is terminated or an exception thrown.
 
 There are three types of assertions of particular interest: pre-conditions,
 post-conditions, and loop invariants. 

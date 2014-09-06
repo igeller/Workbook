@@ -1,32 +1,29 @@
+
+
 ASSERTIONS
 
-by Burton Rosenberg
+An assertion is a logical statement that should evaluate to true. Assertions can 
+be just a mind-amge, at most a notation or comment  in the coade. They have 
+become so popular that now some languages have assert statements, which are 
+actual code that evaluates the assertion. If the assertion evaluates false the 
+code flow might be terminated or an exception thrown.
 
+There are three types of assertions of particular interest: pre-conditions,
+post-conditions, and loop invariants. 
 
-The method of loop invariants is an extension of the method of
-assertions. An assertion is a logical statement that should evaluate to
-true. Assertions as first conceived were just a technique of thought,
-but now languages or libraries have adopted the technique so that an
-assertion is an actual piece of code that is evaluated, and if it
-evaluates false, the assertion fails, and the code flow might be
-terminated.
+A code block, say W, must assume various things are true in order that it
+function properly. One can assert before the code block those truths as
+a logical statement, and call it a pre-condition for the code. An assertion
+does not make it so - it is an attempt to make clear what needs to be made
+true before block W runs.
 
-On type of assertion is an assertion made before a block of code which
-summarizes that the code will assume as true, and if not true, the code
-might not work. These are also called pre-conditions. For instance, a
-precondition for finding the maximum of a set of integers would be that
-the set must be non-empty. The code that asserts a non-empty set as a
-pre-condition does not have to reason about why the set is non-empty.
-The user of the code must reason out why the code will never be run on
-an empty set. The code that asserts the pre-condition can assume it
-true.
-
-The assertions that are made at the end of a code block summarize what
-work the code has done. The assertion will pertain to the new
-information or organization achieved by the code block, on the
-assumption of the pre-condition, and this assertion is called the
-post-condition. The code has transformed a world given by the
-pre-conditions into a world given by the post-conditions.
+The block W accomplishes something - it sets the world into a new state, and
+further code can rely on that state. One can make an assertion modeling that
+state and place it at the end of block W, and this is called a post-condition.
+Just as with a pre-condition, asserting a post-condition does not make it true,
+the block W makes it true. In fact, the promise of W is that if the world is
+such that the pre-condition is true before the block runs, then it will take action 
+such that the post-condition will be true once the block has run.
 
 For instance, the code:
 
@@ -128,3 +125,4 @@ invariant, and might in its workings temporarily make the invariant
 false. But the code in W is obliged to restore the invariant to truth
 before the end of its run.
 
+-burt rosenberg, Creative Commons share and share alike 2014

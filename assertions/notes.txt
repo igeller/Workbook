@@ -1,55 +1,87 @@
 
 ASSERTIONS
 
-The method of loop invariants is an extension of the method of assertions. An assertion is a logical statement that should evaluate to true. Assertions as first conceived were just a technique of thought, but now languages or libraries have adopted the technique so that an assertion is an actual piece of code that is evaluated, and if it evaluates false, the assertion fails, and the code flow might be terminated.
+The method of loop invariants is an extension of the method of
+assertions. An assertion is a logical statement that should evaluate to
+true. Assertions as first conceived were just a technique of thought,
+but now languages or libraries have adopted the technique so that an
+assertion is an actual piece of code that is evaluated, and if it
+evaluates false, the assertion fails, and the code flow might be
+terminated.
 
-On type of assertion is an assertion made before a block of code which summarizes that the code will assume as true, and if not true, the code might not work. These are also called pre-conditions. For instance, a precondition for finding the maximum of a set of integers would be that the set must be non-empty. The code that asserts a non-empty set as a pre-condition does not have to reason about why the set is non-empty. The user of the code must reason out why the code will never be run on an empty set. The code that asserts the pre-condition can assume it true.
+On type of assertion is an assertion made before a block of code which
+summarizes that the code will assume as true, and if not true, the code
+might not work. These are also called pre-conditions. For instance, a
+precondition for finding the maximum of a set of integers would be that
+the set must be non-empty. The code that asserts a non-empty set as a
+pre-condition does not have to reason about why the set is non-empty.
+The user of the code must reason out why the code will never be run on
+an empty set. The code that asserts the pre-condition can assume it
+true.
 
-The assertions that are made at the end of a code block summarize what work the code has done. The assertion will pertain to the new information or organization achieved by the code block, on the assumption of the pre-condition, and this assertion is called the post-condition. The code has transformed a world given by the pre-conditions into a world given by the post-conditions. 
+The assertions that are made at the end of a code block summarize what
+work the code has done. The assertion will pertain to the new
+information or organization achieved by the code block, on the
+assumption of the pre-condition, and this assertion is called the
+post-condition. The code has transformed a world given by the
+pre-conditions into a world given by the post-conditions.
 
 For instance, the code:
 
-   int f( struct * pair ) {
-      if ( pair->a < pair->b ) {
-         t = pair->a ;
-         pair->a = pair->b ;
-         pair->b = t ;
+   int f( struct * pair ) { if ( pair->a < pair->b ) { t = pair->a ;
+   pair->a = pair->b ; pair->b = t ;
       }
       // ASSERT: pair->a >= pair->b
-   }
-   
-has transformed the very weak pre-condition that pair is a struct containing to integers a and b to the post-condition that a is the larger of the two, and b the smaller (or they are the same value).
+      //    }
+      //    }
+has transformed the very weak pre-condition that pair is a struct
+containing to integers a and b to the post-condition that a is the
+larger of the two, and b the smaller (or they are the same value).
 
-Consider placing the fraction a/b into lowest terms. The code looks as follows
+Consider placing the fraction a/b into lowest terms. The code looks as
+follows
 
     // ASSERT: a, b are integers, b!=0
-    
+    // 
     { code block U }
-    
-    // ASSERT: 0 < b <= a, and s is the sign of (the original) a/b
-    
-    { code block V }
-    
-    // ASSERT: d is the gcd(a,b) (function gcd's post-condition)
-	
-	{ code block W }
-    
-    // ASSERT: a/b is in lowest terms
-    
 
+    // ASSERT: 0 < b <= a, and s is the sign of (the original) a/b
+    // 
+    { code block V }
+
+    // ASSERT: d is the gcd(a,b) (function gcd's post-condition)
+    // 
+	{ code block W }
+
+    // ASSERT: a/b is in lowest terms
+    // 
+    // 
 "I'VE BEEN SPEAKING PROSE ALL MY LIFE WITHOUT KNOWING IT"
 
-The method of assertions is implicit each time a programmer references a pointer (or, for Java programers, a reference). A null pointer cannot be dereferenced. It will cause the program to crash, or the Java system to throw an exception. The programmer mentally must have, or should have, an assertion of non-null before the use of the pointer.
+The method of assertions is implicit each time a programmer references a
+pointer (or, for Java programers, a reference). A null pointer cannot be
+dereferenced. It will cause the program to crash, or the Java system to
+throw an exception. The programmer mentally must have, or should have,
+an assertion of non-null before the use of the pointer.
 
-Null pointer exceptions (segmentation faults in C) are very common because of the failure to satisfy this pre-condition to pointer use. That means there was a failure of the post-condition leading up to the pointer use.
+Null pointer exceptions (segmentation faults in C) are very common
+because of the failure to satisfy this pre-condition to pointer use.
+That means there was a failure of the post-condition leading up to the
+pointer use.
 
      W
-     // assert pointer p non-null (even, p is a non-null object of type T)
+     // assert pointer p non-null (even, p is a non-null object of type
+     // T)
      dereference of p
-     
-The assertion is the post-condition of W and the pre-condition to pointer use.
 
-In this situation the method of assertions reminds the programmer that there should be a good and hopefully simple reason why the pointer is non-null. It encourages the programmer to recognize the logic that achieves the assertion, and even encourages that the program structure lend itself to simplify the logic that leads towards the assertion.
+The assertion is the post-condition of W and the pre-condition to
+pointer use.
+
+In this situation the method of assertions reminds the programmer that
+there should be a good and hopefully simple reason why the pointer is
+non-null. It encourages the programmer to recognize the logic that
+achieves the assertion, and even encourages that the program structure
+lend itself to simplify the logic that leads towards the assertion.
 
 
 
@@ -58,41 +90,33 @@ LOOP INVARIANTS
 Given a loop:
 
    while CONDITION:
-   
+
        code block W
 
-how are we to reason about the correctness? In fact, this code unwinds into a repeated sequence of runnings of W, 
+how are we to reason about the correctness? In fact, this code unwinds
+into a repeated sequence of runnings of W,
 
-    <sup>1</sup>W
-    <sup>2</sup>W
-    <sup>3</sup>W
-    ...
-    
-where I have used the special notation <sup>i</sup>W to signify the i-th time through the loop body W.
+    <sup>1</sup>W <sup>2</sup>W <sup>3</sup>W ...
 
-The method of loop invariants will summarize correctness by asserting that the pre-condition of <sup>i+1</sup>W is satisfied by the post-condition of <sup>i</sup>W; and since <sup>i</sup>W and <sup>i+1</sup>W are the same code, the pre- and post- conditions of W are the same. Since it is a logical expression that does not change, it is called invariant, hence the name "the loop invariant". 
+where I have used the special notation <sup>i</sup>W to signify the i-th
+time through the loop body W.
 
-If a proper loop invariant can be found, and the block W is coded to that loop invariant, correctness follows easily. One only reasons about a single running of W. The invariant insures that one W runs into the next with out logical flaw.
+The method of loop invariants will summarize correctness by asserting
+that the pre-condition of <sup>i+1</sup>W is satisfied by the
+post-condition of <sup>i</sup>W; and since <sup>i</sup>W and
+<sup>i+1</sup>W are the same code, the pre- and post- conditions of W
+are the same. Since it is a logical expression that does not change, it
+is called invariant, hence the name "the loop invariant".
 
-Because progress must be made through the loop, something must change by the code block W, and if the loop invariant is to be at all helpful for correctness, it must be that what the code block changes affects the invariant, and might in its workings temporarily make the invariant false. But the code in W is obliged to restore the invariant to truth before the end of its run. 
+If a proper loop invariant can be found, and the block W is coded to
+that loop invariant, correctness follows easily. One only reasons about
+a single running of W. The invariant insures that one W runs into the
+next with out logical flaw.
 
-
-SPLITTER EXAMPLE
-
-The goal is the take an array of numbers, and a particular integer value, the <em>splitter</em>, and rearrange the numbers in the array so that all the numbers bigger than the splitter are to the right of the array (this means higher numbered indices) and all the numbers equal to or less than the splitter are to the left of the array (this means lower numbered indices).
-
-To do this by the method of loop invariants, we try to do this by focusing on what happens in one isolated sweep through the loop. The progress to completion will be small step by small step each time through the loop. We will limit entirely our concerns about the logic of how a step interacts with the step before it and the step after it through the summarizing "loop invariant". As long as the step before leaves us with a good loop invariant, and we leave for the step after us a good loop invariant, all will work well. The loop invariant completely summarizes the requirements for correctness that allow the passes through the loops to link one to the next.
-
-The conceptual idea of the invariant is that we will begin any pass through the loop with a certain number of large numbers tucked into the right hand end of the array; and a certain number of small numbers tucked into the left hand end of the array. This is a partial solution. The important thing is that we can go from completely unsolved to completely solved one step at a time with a fairly simply interconnecting logic. We will create two indices, i1 and i2, and make these the boundaries where we have certainly identified and organized our small and large numbers. Completely unsolved we just set i1 and i2 so that specify empty regions. We set i1 so small there are no array cells that we assert have small numbers, and likewise we set i2 so large there are no array cells that we assert have large numbers.
-
-We exam a new number and it is ever larger than the splitter or not, and depending on the outcome we place it either with the smaller numbers, incrementing i1, or with the larger numbers, decrementing i2. We start the pass with a true Loop Invariant, and end with a true Loop Invariant, however the distance between i1 and i2 has decreased by exactly one.
-
-Eventually the distance between i1 and i2 will be zero, and then we are completely solved. 
-
-
-CONCLUSION
-
-The method of loop invariants avoids complicated, and almost always faulty, logic that spans loop passes &mdash; that something on line 7 of pass i will be ok because of something on line 8 of pass i-1; or that it is the necessary setup for what will happen on line 5 of pass i+1. No. We instead have a building block approach, and if the in-face requirements matches the out-face promises then we can stack the blocks and know the logic will flow just as we expect.
-
-
+Because progress must be made through the loop, something must change by
+the code block W, and if the loop invariant is to be at all helpful for
+correctness, it must be that what the code block changes affects the
+invariant, and might in its workings temporarily make the invariant
+false. But the code in W is obliged to restore the invariant to truth
+before the end of its run.
 

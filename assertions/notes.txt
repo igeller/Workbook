@@ -28,12 +28,15 @@ pre-conditions into a world given by the post-conditions.
 
 For instance, the code:
 
-   int f( struct * pair ) { if ( pair->a < pair->b ) { t = pair->a ;
-   pair->a = pair->b ; pair->b = t ;
-      }
-      // ASSERT: pair->a >= pair->b
-      //    }
-      //    }
+   int f( struct * pair ) { 
+       if ( pair->a < pair->b ) { 
+       		t = pair->a ;
+   			pair->a = pair->b ; 
+   			pair->b = t ;
+       }
+       // ASSERT: pair->a >= pair->b
+	}
+
 has transformed the very weak pre-condition that pair is a struct
 containing to integers a and b to the post-condition that a is the
 larger of the two, and b the smaller (or they are the same value).
@@ -42,20 +45,20 @@ Consider placing the fraction a/b into lowest terms. The code looks as
 follows
 
     // ASSERT: a, b are integers, b!=0
-    // 
+    
     { code block U }
 
     // ASSERT: 0 < b <= a, and s is the sign of (the original) a/b
-    // 
+    
     { code block V }
 
     // ASSERT: d is the gcd(a,b) (function gcd's post-condition)
-    // 
+    
 	{ code block W }
 
     // ASSERT: a/b is in lowest terms
-    // 
-    // 
+
+
 "I'VE BEEN SPEAKING PROSE ALL MY LIFE WITHOUT KNOWING IT"
 
 The method of assertions is implicit each time a programmer references a
@@ -70,8 +73,8 @@ That means there was a failure of the post-condition leading up to the
 pointer use.
 
      W
-     // assert pointer p non-null (even, p is a non-null object of type
-     // T)
+     // assert pointer p non-null (even, p is a non-null object of 
+     // type T)
      dereference of p
 
 The assertion is the post-condition of W and the pre-condition to
@@ -96,15 +99,18 @@ Given a loop:
 how are we to reason about the correctness? In fact, this code unwinds
 into a repeated sequence of runnings of W,
 
-    <sup>1</sup>W <sup>2</sup>W <sup>3</sup>W ...
-
-where I have used the special notation <sup>i</sup>W to signify the i-th
+    W (1) 
+    W (2)
+    W (3)
+    ...
+    
+where I have used the special notation W  (i)to signify the i-th
 time through the loop body W.
 
 The method of loop invariants will summarize correctness by asserting
-that the pre-condition of <sup>i+1</sup>W is satisfied by the
-post-condition of <sup>i</sup>W; and since <sup>i</sup>W and
-<sup>i+1</sup>W are the same code, the pre- and post- conditions of W
+that the pre-condition of W (i+1) is satisfied by the
+post-condition of W (i); and since  W (i) and
+ W (i+1) are the same code, the pre- and post- conditions of W
 are the same. Since it is a logical expression that does not change, it
 is called invariant, hence the name "the loop invariant".
 

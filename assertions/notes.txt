@@ -1,5 +1,7 @@
-
 ASSERTIONS
+
+by Burton Rosenberg
+
 
 The method of loop invariants is an extension of the method of
 assertions. An assertion is a logical statement that should evaluate to

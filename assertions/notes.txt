@@ -1,11 +1,11 @@
 
-
 ASSERTIONS
 
 An assertion is a logical statement that should evaluate to true. Assertions can 
-be just a mind-game - at most a notation or comment in the code, or they can be actual
-code checks. They have become so popular that now some languages have assert statements, 
-which evaluate the assertion and if false the code flow is terminated or an exception thrown.
+be just a mind-amge, at most a notation or comment  in the coade. They have 
+become so popular that now some languages have assert statements, which are 
+actual code that evaluates the assertion. If the assertion evaluates false the 
+code flow might be terminated or an exception thrown.
 
 There are three types of assertions of particular interest: pre-conditions,
 post-conditions, and loop invariants. 
@@ -59,34 +59,35 @@ follows
 
 "I'VE BEEN SPEAKING PROSE ALL MY LIFE WITHOUT KNOWING IT"
 
-The method of assertions is implicit each time a programmer references a
-pointer (or, for Java programers, a reference). A null pointer cannot be
-dereferenced. It will cause the program to crash, or the Java system to
-throw an exception. The programmer mentally must have, or should have,
-an assertion of non-null before the use of the pointer.
+The method of assertions is implicit each time a programmer references a pointer
+(or, for Java programers, a reference). A null pointer cannot be dereferenced.
+It will cause the program to crash, or the Java system to throw an exception.
+The programmer mentally must have, or should have, an assertion of non-null
+before the use of the pointer.
 
-Null pointer exceptions (segmentation faults in C) are very common
-because of the failure to satisfy this pre-condition to pointer use.
-That means there was a failure of the post-condition leading up to the
-pointer use.
+Null pointer exceptions (segmentation faults in C) are very common because of
+the failure to satisfy this pre-condition to pointer use. That means there was a
+failure of the post-condition leading up to the pointer use.
 
      W
      // assert pointer p non-null (even, p is a non-null object of 
      // type T)
      dereference of p
 
-The assertion is the post-condition of W and the pre-condition to
-pointer use.
+The assertion is the post-condition of W and the pre-condition to pointer use.
 
-In this situation the method of assertions reminds the programmer that
-there should be a good and hopefully simple reason why the pointer is
-non-null. It encourages the programmer to recognize the logic that
-achieves the assertion, and even encourages that the program structure
-lend itself to simplify the logic that leads towards the assertion.
+In this situation the method of assertions reminds the programmer that there
+should be a good and hopefully simple reason why the pointer is non-null. It
+encourages the programmer to recognize the logic that achieves the assertion,
+and even encourages that the program structure lend itself to simplify the logic
+that leads towards the assertion.
 
 
 
 LOOP INVARIANTS
+
+The method of assertions can be applied to the correctness of loops through
+a type of assertion called the loop invariant.
 
 Given a loop:
 
@@ -94,34 +95,82 @@ Given a loop:
 
        code block W
 
-how are we to reason about the correctness? In fact, this code unwinds
-into a repeated sequence of runnings of W,
+one aspect is that the code block W is repeatedly called. If the code block
+W is conceived as a transformer from pre-conditions to post-conditions, since
+the post-condition of one run of W must match the pre-condition for the following
+run, the post and pre-conditions must be the same assertion.
 
-    W (1) 
-    W (2)
-    W (3)
-    ...
-    
-where I have used the special notation W  (i)to signify the i-th
-time through the loop body W.
+Since this is an assertion that does not change, it is called invariant, and hence
+the name loop invariant. Importantly, the assertion need not be true inside of W;
+in fact, the way the methods works is in order to make progress towards completion
+of the loop, the code in W takes a tentative step forward, perhaps making the 
+invariant false. The following code in W fixes up the situation to restore the
+invariant.
 
-The method of loop invariants will summarize correctness by asserting
-that the pre-condition of W (i+1) is satisfied by the
-post-condition of W (i); and since  W (i) and
- W (i+1) are the same code, the pre- and post- conditions of W
-are the same. Since it is a logical expression that does not change, it
-is called invariant, hence the name "the loop invariant".
+If well done, then the correctness of the looping follows effortlessly. One
+element that has not been considered is the condition for termination. The loop
+invariant plays no role in that. Termination is taken as a separate issue, and a
+separate proof is provided as to why the loop will terminate.
 
-If a proper loop invariant can be found, and the block W is coded to
-that loop invariant, correctness follows easily. One only reasons about
-a single running of W. The invariant insures that one W runs into the
-next with out logical flaw.
+This is a very smart thing to do. Although termination might seem a simple matter,
+that not only contradicts the numerous experiences programmers have with infinitely
+spinning loops, but the theoretical observation that the solution to a problem can
+be encoded in the termination or not of a program. There is no reason why termination
+is a simpler problem than body correctness and in fact they are of equal difficulty.
 
-Because progress must be made through the loop, something must change by
-the code block W, and if the loop invariant is to be at all helpful for
-correctness, it must be that what the code block changes affects the
-invariant, and might in its workings temporarily make the invariant
-false. But the code in W is obliged to restore the invariant to truth
-before the end of its run.
+For instance, one might a question in diophantine equations: given a formula in 
+several variables with integer coefficients, are there integer assignments to the 
+variables that make the formula evaluate to zero? 
 
--burt rosenberg, Creative Commons share and share alike 2014
+One solution is to walk through all integer assignments checking if that assignment 
+yields zero. If it does, the loop breaks. Whether or not there is a solution is then 
+exactly the problem of whether or not the loop terminates.
+
+The loop invariant, as an assertion, is placed before the first W, between consecutive 
+runs of W, and after that last W: A W A W ... W A. In the code flow, however, it is
+placed before the while line and after the last line in W:
+
+	Assert L.I.
+	while CONDITION:
+		code block W
+		Assert L.I.
+
+Getting right the first assertion is generally done by setting up a simple to the point
+of trivial situation. Often asserting the truth of one or zero elements. It is a bit
+different than following loop invariant assertions because this assertion, and this 
+assertion alone, you don't get to assume a previous assertion of the loop invariant.
+The programmer has to make it true out of other assertions.
+
+Since the condition does not (should not!) mess with the loop invariant, it is good
+enough to check the invariant at the bottom of the loop in order to assure it is 
+true at loop exit. Care might also be needed if the code block W uses a break statement
+to exit from within the block. One should put a loop invariant assertion just before
+each break.
+ 
+
+EXAMPLES OF LOOP INVARIANTS
+
+
+A simple example is finding the maximum of n elements in an array A. The problem
+is recast as finding finding the maximum of the first i elements in an array A
+of n elements, max(A,i.n). The loop invariant is that variable m == max(A,i,n).
+
+The loop invariant is established before entering the while loop by setting 
+m := A[0], then m == max(A,1,n).
+
+Assuming m == max(A,i,n), a pass through the loop body first sets i := i+1. There
+are two possibilities, if A[i+1] <= m, then m == max(A,i+1,n) and the loop invariant
+is still true. Else A[i+1] > m, and is the new maximum. Setting m := A[i+1] we
+reestablish that m == max(A,i+1,n). 
+
+One pass through the loop is now completed.
+
+Termination is that i increments each time through the loop and the loop terminates
+when i equals n. Then m == max(A,n,n), which is the desired result.
+
+Note that when setting up for the loop, we used that there is no maximum to the empty
+set of numbers, hence n must be at least 1.
+
+
+
+

@@ -26,9 +26,21 @@ int gcd( int a, int b ) {
 
 struct P * reduce(struct P * p) {
 	
-	// ASSERT: p->a, p->b are integers
+	// ASSERT: p->a/p->b is a fraction
 	
     int a, b, s, d ;
+    
+    if ( !p->b ) {
+    	p->a = 0 ;
+    	return p ;
+    }
+    if ( !p->a ) {
+    	p->b = 1 ;
+    	return p ;
+    }
+    
+	// ASSERT: p->a != 0 && p->b != 0
+	
     a = p->a ;
     b = p->b ;
     
@@ -39,9 +51,8 @@ struct P * reduce(struct P * p) {
     
     if (a<b) { int t = a ; a = b ; b = t ; }
     
-    if (b==0) return p ;
-    
-    // ASSERT: 0<a<=b, and s is the sign of (the original) a/b
+    // ASSERT: 0<a<=b, and (relevance requirement) s * a/b or s * b/a 
+    // is the original fraction
     
     d = gcd(a,b) ; // function gcd's pre-conditions match above assertion
     
@@ -53,7 +64,7 @@ struct P * reduce(struct P * p) {
     	p->b = ((t=p->b/d)<0) ? -t: t ;
     }
     
-    // ASSERT: frac is in lowest terms
+    // ASSERT: p->a/p->b is the original fraction in lowest terms
     
     return p ;
 }

@@ -40,3 +40,10 @@ clean:
 	-rm splitter.o
 	-rm splitter
 	-rm reduce
+
+push:
+	make clean
+	git add *
+	git commit -m ok
+	# git remote add origin https://github.com/burtr/Workbook.git
+	git push -u origin master

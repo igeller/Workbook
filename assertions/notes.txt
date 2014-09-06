@@ -30,12 +30,12 @@ For instance, the code:
 
    int f( struct * pair ) { 
        if ( pair->a < pair->b ) { 
-       		t = pair->a ;
-   			pair->a = pair->b ; 
-   			pair->b = t ;
+            t = pair->a ;
+            pair->a = pair->b ; 
+            pair->b = t ;
        }
        // ASSERT: pair->a >= pair->b
-	}
+    }
 
 has transformed the very weak pre-condition that pair is a struct
 containing to integers a and b to the post-condition that a is the
@@ -54,7 +54,7 @@ follows
 
     // ASSERT: d is the gcd(a,b) (function gcd's post-condition)
     
-	{ code block W }
+    { code block W }
 
     // ASSERT: a/b is in lowest terms
 

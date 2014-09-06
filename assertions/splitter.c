@@ -43,9 +43,10 @@ int split(int a[], int n, int p) {
     
     int i1,i2 ;
     
-    /* L.I.: array is a permutation of the original array AND:
-     *  1) for all 0<=j<i1, a[j]<=p
-     *  2) for all i2<=j<n, a[j]>p
+    /* L.I.: array is a permutation of the original array (the relevance requirement)
+     * and:
+     *  1) for all 0 <= j < i1, a[j] <= p
+     *  2) for all i2 <= j < n, a[j] > p
      */
     
     // initialize L.I.

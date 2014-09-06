@@ -147,6 +147,24 @@ true at loop exit. Care might also be needed if the code block W uses a break st
 to exit from within the block. One should put a loop invariant assertion just before
 each break.
  
+RELEVANCE CONDITIONS
+
+It can be difficult to come up with a proper loop invariant. It is not uncommon, and 
+certainly not unwise, to "write to the invariant", that is, favor an approach to the 
+problem that lends itself to invariants. Among the requirements of the invariant is 
+that it captures simply the problem requirements, that it can be disturbed but easily
+reestablished by some forward step in the loop, and that it is relevant to the problem.
+
+Of these, I have found that the relevance requirement is the hardest to capture 
+mathematically. For instance, the statement: the current data is a permutation of the 
+original data. It is not reasonable to check that this is true. It would be 
+computationally expensive, and generally unnecessary as the condition can be checked by eye.
+
+I call "relevance conditions" parts of the loop invariant that refer back to the original 
+problem, and I am not surprised when those conditions are complex, and in practice 
+will not be checked explicitly by any assertion logic.
+
+
 
 EXAMPLES OF LOOP INVARIANTS
 
